@@ -11,10 +11,11 @@ class HomePage extends StatelessWidget{
 
   @override
   Widget build(BuildContext context){
-    return Scaffold(body: Container(
-      child: Column(
-        children: [NavigationMenu(),
-        Expanded(child: _contents()),
+    return Scaffold(
+      body: Container(
+        child: Column(
+          children: [NavigationMenu(),
+          Expanded(child: _contents()),
           Footer(),],
       ),
     ));
