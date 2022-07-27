@@ -80,84 +80,90 @@ class _NavigationMenuState extends State<NavigationMenu> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      alignment: Alignment.topCenter,
-      color: Color(0xffC2A483),
-      child: MouseRegion(
-              onHover: (PointerEvent details) {
-      setState(() {
-      additionalMenuVisible = true;
-      });
-      },
+        constraints: BoxConstraints(maxWidth: 1280,minWidth: 1280),
+        color: Color(0xffC2A483),
+        child: MouseRegion(
+          onHover: (PointerEvent details) {
+            setState(() {
+              additionalMenuVisible = true;
+
+            });
+          },
           onExit: (PointerEvent details) {
             setState(() {
               additionalMenuVisible = false;
             });
           },
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                  margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                  child: Image.asset("assets/images/logo.png", height: 40)),
-              Container(
-                margin: const EdgeInsets.fromLTRB(10, 15, 10, 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [menu("공지사항", () {})],
+            child:Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                    margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                    child:InkWell(
+                      onTap: (){
+                        Navigator.pushNamed(context, "/");
+                      },
+                        child:Image.asset("assets/images/logo.png", height: 40)),),
+                Container(
+                  margin: const EdgeInsets.fromLTRB(10, 15, 10, 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [menu("공지사항", () {})],
+                  ),
                 ),
-              ),
-              Container(
-                margin: const EdgeInsets.fromLTRB(10, 15, 10, 10),
-                child: Column(
+                Container(
+                  margin: const EdgeInsets.fromLTRB(10, 15, 10, 10),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        menu("캠핑/일반차 렌트", () {}),
+                        additionalmenu("캠핑카 렌트", () {}),
+                        additionalmenu("국산차 렌트", () {}),
+                        additionalmenu("외제차 렌트", () {}),
+                        adminmenu("렌트카 등록", () {}),
+                      ]),
+                ),
+                Container(
+                  margin: const EdgeInsets.fromLTRB(10, 15, 10, 10),
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      menu("캠핑/일반차 렌트", () {}),
-                      additionalmenu("캠핑카 렌트", () {}),
-                      additionalmenu("국산차 렌트", () {}),
-                      additionalmenu("외제차 렌트", () {}),
-                      adminmenu("렌트카 등록", () {}),
-                    ]),
-              ),
-              Container(
-                margin: const EdgeInsets.fromLTRB(10, 15, 10, 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    menu("캠핑카 제작", () {}),
-                    adminmenu("상품 등록", () {}),
-                  ],
+                      menu("캠핑카 제작", () {}),
+                      adminmenu("상품 등록", () {}),
+                    ],
+                  ),
                 ),
-              ),
-              Container(
-                margin: const EdgeInsets.fromLTRB(10, 15, 10, 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [menu("캠핑용품", () {}), adminmenu("상품 등록", () {})],
+                Container(
+                  margin: const EdgeInsets.fromLTRB(10, 15, 10, 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [menu("캠핑용품", () {}), adminmenu("상품 등록", () {})],
+                  ),
                 ),
-              ),
-              Container(
-                margin: const EdgeInsets.fromLTRB(10, 15, 10, 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [menu("이용후기", () {})],
+                Container(
+                  margin: const EdgeInsets.fromLTRB(10, 15, 10, 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [menu("이용후기", () {})],
+                  ),
                 ),
-              ),
-              Container(
-                margin: const EdgeInsets.fromLTRB(10, 15, 10, 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    menu("마이페이지", () {}),
-                    additionalmenu("장바구니", () {}),
-                    additionalmenu("주문목록", () {}),
-                    additionalmenu("내정보", () {}),
-                    adminmenu("일정관리", () {}),
-                  ],
+                Container(
+                  margin: const EdgeInsets.fromLTRB(10, 15, 10, 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      menu("마이페이지", () {}),
+                      additionalmenu("장바구니", () {}),
+                      additionalmenu("주문목록", () {}),
+                      additionalmenu("내정보", () {}),
+                      adminmenu("일정관리", () {}),
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          )),
-    );
+              ],
+            ),
+          ),
+        );
   }
 }
