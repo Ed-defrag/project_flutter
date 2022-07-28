@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fchabak/src/home.dart';
+import 'package:fchabak/src/pages/home.dart';
 
 void main() {
   runApp(MyApp());

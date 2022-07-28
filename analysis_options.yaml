@@ -25,7 +25,25 @@ linter:
     # avoid_print: false  # Uncomment to disable the `avoid_print` rule
     # prefer_single_quotes: true  # Uncomment to enable the `prefer_single_quotes` rule
 
+dependencies:
+  url_launcher: ^6.1.5
 
+
+
+fonts:
+  - family: noto_sans
+    fonts:
+      - asset : assets/fonts/notosans_black.otf
+        weight : 900
+      - asset : assets/fonts/notosans_bold.otf
+        weight : 700
+      - asset : assets/fonts/notosans_medium.otf
+        weight : 500
+      - asset : assets/fonts/notosans_regular.otf
+        weight : 400
+      - asset : assets/fonts/notosans_light.otf
+      - asset : assets/fonts/notosans_thin.otf
+        weight : 300
 
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options
