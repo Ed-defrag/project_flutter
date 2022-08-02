@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:fchabak/src/components/navigationMenu.dart';
 import 'package:fchabak/src/components/footer.dart';
 import 'package:fchabak/src/models/todayCarsModel.dart';
+import 'package:fchabak/src/controllers/todaycarController.dart';
+import 'package:get/get.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -30,7 +32,7 @@ class _Hompage extends State<HomePage> {
   late List<String> selectedADayList;
   late List cars;
 
-  List<String> entries = ["aaaa", "bbbb", "cccc", "dddd"];
+
 
   String depatureYear = '2022년';
   String depatureMonth = '11월';

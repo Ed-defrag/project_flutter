@@ -3,6 +3,21 @@ import 'package:fchabak/src/models/todayCarsModel.dart';
 import 'package:http/http.dart' as http;
 
 
+// class json_todayscar{
+//   static var client = http.Client();
+//   static Future<List<TodayCarsModel>?> fetchCars() async{
+//     var response = await client.get(Uri.parse("http://139.150.83.176/api/cars/today"));
+//     if(response.statusCode == 200){
+//       var jsonData = response.body;
+//       return todaycarsFromJson(jsonData);
+//     }
+//     else{
+//       return null;
+//     }
+//   }
+// }
+
+
 class json_todayscar{
   static Future<List<TodayCarsModel>> getPosts() async{
     try{
