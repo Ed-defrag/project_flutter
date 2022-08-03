@@ -29,7 +29,7 @@ class Footer extends StatelessWidget {
 
   Widget infoMenu(String iMenu) {
     return Container(
-      margin: const EdgeInsets.fromLTRB(26, 14, 26, 28),
+      margin: const EdgeInsets.fromLTRB(0, 14, 0, 25),
       child: Text(iMenu,
           style: TextStyle(
             fontSize: 14,
@@ -43,7 +43,7 @@ class Footer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      constraints: BoxConstraints(maxWidth: 1280, minWidth: 1280),
+      width: 1280,
       color: Color(0xffC2A483),
       alignment: Alignment.topCenter,
       child: Column(
@@ -56,7 +56,7 @@ class Footer extends StatelessWidget {
               children: [
                 Container(
                   margin: const EdgeInsets.fromLTRB(0, 19, 13, 10),
-                  child: Text("첫 차박",
+                  child: Text("바로렌트카(첫 차박)",
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
@@ -73,20 +73,29 @@ class Footer extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                margin: const EdgeInsets.fromLTRB(0, 14, 26, 28),
+                margin: const EdgeInsets.fromLTRB(0, 14, 0, 28),
                 child: Text("대표자명 : 장문성",
                     style: TextStyle(
                       fontSize: 14,
-                      fontWeight: FontWeight.normal,
+                      fontWeight: FontWeight.w500,
                       fontFamily: 'noto_sans',
                       color: Colors.white,
                     )),
               ),
               infoMenu("사업자 번호 : 000-00-0000"),
               infoMenu("통신판매업 : 000-수원-00000"),
+              infoMenu("사업장 : 경기도 성남시 수정구 위례서일로3길 14-13, 1층"),
               infoMenu("대표번호 : 000-0000-0000"),
-              infoMenu("이메일 : firstchabak@naver.com"),
-              infoMenu("이메일 : firstchabak@naver.com"),
+              Container(
+                margin: const EdgeInsets.fromLTRB(0, 14, 0, 28),
+                child: Text("이메일 : firstchabak@naver.com",
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: 'noto_sans',
+                      color: Colors.white,
+                    )),
+              ),
             ],
           ),
         ],

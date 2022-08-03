@@ -1,4 +1,5 @@
 import 'dart:html';
+import 'package:fchabak/main.dart';
 import 'package:flutter/material.dart';
 
 class NavigationMenu extends StatefulWidget {
@@ -7,8 +8,6 @@ class NavigationMenu extends StatefulWidget {
 }
 
 class _NavigationMenuState extends State<NavigationMenu> {
-  bool adminVisible = false;
-  bool additionalMenuVisible = false;
 
   Widget menu(String Menu, GestureTapCallback onTap) {
     return InkWell(
@@ -45,7 +44,7 @@ class _NavigationMenuState extends State<NavigationMenu> {
           ),
         ),
       ),
-      visible: additionalMenuVisible,
+      visible: MyApp.additionalMenuVisible,
     );
   }
 
@@ -72,7 +71,7 @@ class _NavigationMenuState extends State<NavigationMenu> {
       //
       maintainState: true,
       //
-      visible: adminVisible,
+      visible: MyApp.adminVisible,
     );
   }
 
@@ -111,12 +110,12 @@ class _NavigationMenuState extends State<NavigationMenu> {
       child: MouseRegion(
         onHover: (PointerEvent details) {
           setState(() {
-            additionalMenuVisible = true;
+            MyApp.additionalMenuVisible = true;
           });
         },
         onExit: (PointerEvent details) {
           setState(() {
-            additionalMenuVisible = false;
+            MyApp.additionalMenuVisible = false;
           });
         },
         child: Row(

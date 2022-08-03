@@ -1,13 +1,14 @@
 import 'dart:ui';
-
-import 'package:fchabak/src/service/json_todayscar.dart';
+import 'package:fchabak/main.dart';
+import 'package:fchabak/src/components/homeTodayCarItem.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fchabak/src/components/navigationMenu.dart';
 import 'package:fchabak/src/components/footer.dart';
-import 'package:fchabak/src/models/todayCarsModel.dart';
 import 'package:fchabak/src/controllers/todaycarController.dart';
 import 'package:get/get.dart';
+import 'package:html/parser.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -32,7 +33,7 @@ class _Hompage extends State<HomePage> {
   late List<String> selectedADayList;
   late List cars;
 
-
+  final controller = Get.put(todaycarController());
 
   String depatureYear = '2022년';
   String depatureMonth = '11월';
@@ -75,7 +76,6 @@ class _Hompage extends State<HomePage> {
       selectedDDayList = day_31List;
       selectedADayList = day_31List;
     }
-
   }
 
   void getDay(String year, String month, String type) {
@@ -107,15 +107,10 @@ class _Hompage extends State<HomePage> {
     }
   }
 
-  void setCount(bool state) {
-    setState(() {
-      if(state == true){
-        state = false;
-      }
-      else{
-        state = true;
-      }
-    });
+  Future<void> _launchUrl(String url) async {
+    if(!await launchUrl(Uri.parse(url))){
+
+    }
   }
 
   @override
@@ -170,7 +165,7 @@ class _Hompage extends State<HomePage> {
       width: 246,
       height: 46,
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: onTap,
         style: ElevatedButton.styleFrom(
           primary: Colors.white,
           shape: new RoundedRectangleBorder(
@@ -188,6 +183,44 @@ class _Hompage extends State<HomePage> {
             )),
       ),
     );
+  }
+
+  Widget homeManagementButton(GestureTapCallback onTap) {
+    return Visibility(
+        visible: MyApp.adminVisible,
+        child: Container(
+          width: 153,
+          height: 32,
+          child: ElevatedButton(
+              onPressed: onTap,
+              style: ElevatedButton.styleFrom(
+                primary: Color(0xffC2A483),
+                shape: new RoundedRectangleBorder(
+                  borderRadius: new BorderRadius.circular(16.0),
+                ), //버튼 코너에 라운드
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 20,
+                    height: 20,
+                    color: Colors.black,
+                    // child : Image.asset("assets/images/logo.png", fit: BoxFit.cover,)),
+                  ),
+                  Text("수정/추가",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        height: 1.2,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: 'noto_sans',
+                        color: Colors.white,
+                      )),
+                ],
+              )),
+        ));
   }
 
   Widget homeTypeRadioBtn(String text, int index) {
@@ -465,113 +498,126 @@ class _Hompage extends State<HomePage> {
     );
   }
 
-  Widget todaysCar(){
-    return CustomScrollView(
-        scrollBehavior: MyCustomScrollBehavior(),
-        scrollDirection: Axis.horizontal,
-        slivers: [
-      FutureBuilder(
-          future: json_todayscar.getPosts(),
-          builder: (BuildContext context, AsyncSnapshot<List<TodayCarsModel>> snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              if (snapshot.hasError) {
-                return SliverToBoxAdapter(
-                  child: Text(
-                    '$snapshot.error',
-                    style: TextStyle(color: Colors.red),
-                  ),
-                );
-              } else {
-                return SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (BuildContext context, int index) {
-                      final item = snapshot.data![index];
-                      return Container(
-                          width: 500,
-                          height: 500,
-                          child: Stack(
-                            children: [
-                              Image.network(
-                                item.img![0],
-                                width: 500,
-                                height: 500,
-                                fit: BoxFit.cover,
-                              ),
-                              Visibility(child: Opacity(opacity: 0.3,
-                                child:Container(
-                                  width: 500,
-                                  height: 500,
-                                  decoration: BoxDecoration(
-                                    color: Colors.black,
-                                    border: Border.all(color: Colors.transparent, width: 0.0),
-                                    borderRadius: BorderRadius.all(Radius.circular(11)),
-                                  ),
-                                ),
-                              ),
-                              visible: item.state),
-                              Visibility(child:Container(
-                                width: 500,
-                                height: 500,
-                                decoration: BoxDecoration(
-                                  color: Colors.transparent,
-                                  border: Border.all(color: Colors.transparent, width: 0.0),
-                                  borderRadius: BorderRadius.all(Radius.circular(11)),
-                                ),
-                                child: Column(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
-                                  Text(
-                                    item.title??"없다.",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      height: 1.2,
-                                      fontSize: 40,
-                                      fontWeight: FontWeight.w500,
-                                      fontFamily: 'noto_sans',
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  Text(
-                                    item.amount??"0원",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      height: 1.2,
-                                      fontSize: 70,
-                                      fontWeight: FontWeight.w500,
-                                      fontFamily: 'noto_sans',
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ]),
-                              ),
-                              visible: item.state,
-                              ),
-                              MouseRegion(
-                                onEnter: (PointerEvent details){
-                                  setState(() {
-                                    setCount(item.state);
-                                  });
-                                },
-                                onExit: (PointerEvent details){
-                                  setState(() {
-                                    setCount(item.state);
-                                  });
-                                },
-                              )
-                            ],
-                          ));
-                    },
-                    childCount: snapshot.data?.length,
-                  ),
-                );
-              }
-            } else {
-              return SliverToBoxAdapter(
-                  child: SizedBox(
-                width: 500,
-                height: 500,
-                  child: Text("Error"),
-              ));
-            }
-          })
+  // Widget todaysCar(){
+  //   return CustomScrollView(
+  //       scrollBehavior: MyCustomScrollBehavior(),
+  //       scrollDirection: Axis.horizontal,
+  //       slivers: [
+  //     FutureBuilder(
+  //         future: json_todayscar.getPosts(),
+  //         builder: (BuildContext context, AsyncSnapshot<List<TodayCarsModel>> snapshot) {
+  //           if (snapshot.connectionState == ConnectionState.done) {
+  //             if (snapshot.hasError) {
+  //               return SliverToBoxAdapter(
+  //                 child: Text(
+  //                   '$snapshot.error',
+  //                   style: TextStyle(color: Colors.red),
+  //                 ),
+  //               );
+  //             } else {
+  //               return SliverList(
+  //                 delegate: SliverChildBuilderDelegate(
+  //                   (BuildContext context, int index) {
+  //                     final item = snapshot.data![index];
+  //                     return Container(
+  //                         width: 500,
+  //                         height: 500,
+  //                         child: Stack(
+  //                           children: [
+  //                             Image.network(
+  //                               item.img![0],
+  //                               width: 500,
+  //                               height: 500,
+  //                               fit: BoxFit.cover,
+  //                             ),
+  //                             Visibility(child: Opacity(opacity: 0.3,
+  //                               child:Container(
+  //                                 width: 500,
+  //                                 height: 500,
+  //                                 decoration: BoxDecoration(
+  //                                   color: Colors.black,
+  //                                   border: Border.all(color: Colors.transparent, width: 0.0),
+  //                                   borderRadius: BorderRadius.all(Radius.circular(11)),
+  //                                 ),
+  //                               ),
+  //                             ),
+  //                             visible: item.state),
+  //                             Visibility(child:Container(
+  //                               width: 500,
+  //                               height: 500,
+  //                               decoration: BoxDecoration(
+  //                                 color: Colors.transparent,
+  //                                 border: Border.all(color: Colors.transparent, width: 0.0),
+  //                                 borderRadius: BorderRadius.all(Radius.circular(11)),
+  //                               ),
+  //                               child: Column(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
+  //                                 Text(
+  //                                   item.title??"없다.",
+  //                                   textAlign: TextAlign.center,
+  //                                   style: TextStyle(
+  //                                     height: 1.2,
+  //                                     fontSize: 40,
+  //                                     fontWeight: FontWeight.w500,
+  //                                     fontFamily: 'noto_sans',
+  //                                     color: Colors.white,
+  //                                   ),
+  //                                 ),
+  //                                 Text(
+  //                                   item.amount??"0원",
+  //                                   textAlign: TextAlign.center,
+  //                                   style: TextStyle(
+  //                                     height: 1.2,
+  //                                     fontSize: 70,
+  //                                     fontWeight: FontWeight.w500,
+  //                                     fontFamily: 'noto_sans',
+  //                                     color: Colors.white,
+  //                                   ),
+  //                                 ),
+  //                               ]),
+  //                             ),
+  //                             visible: item.state,
+  //                             ),
+  //                             MouseRegion(
+  //                               onEnter: (PointerEvent details){
+  //                                 setState(() {
+  //                                   setCount(item.state);
+  //                                 });
+  //                               },
+  //                               onExit: (PointerEvent details){
+  //                                 setState(() {
+  //                                   setCount(item.state);
+  //                                 });
+  //                               },
+  //                             )
+  //                           ],
+  //                         ));
+  //                   },
+  //                   childCount: snapshot.data?.length,
+  //                 ),
+  //               );
+  //             }
+  //           } else {
+  //             return SliverToBoxAdapter(
+  //                 child: SizedBox(
+  //               width: 500,
+  //               height: 500,
+  //                 child: Text("Error"),
+  //             ));
+  //           }
+  //         })
+  //   ]);
+  // }
+
+  Widget todaysCar() {
+    return CustomScrollView(scrollBehavior: MyCustomScrollBehavior(), scrollDirection: Axis.horizontal, slivers: [
+      Obx(() => SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (BuildContext context, int index) {
+                return homeTodayCarItem(controller.carsList[index]);
+              },
+              childCount: controller.carsList.length,
+            ),
+          ))
     ]);
   }
 
@@ -618,21 +664,193 @@ class _Hompage extends State<HomePage> {
                       ],
                     ),
                     Container(
+                      margin: EdgeInsets.fromLTRB(0, 140, 0, 0),
+                      width: 1280,
+                      child: Text("즉흥 여행,",
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                            height: 1.2,
+                            fontSize: 70,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'noto_sans',
+                            color: Color(0xffC2A483),
+                          )),
+                    ),
+                    Container(
+                      width: 1280,
+                      child: Text("오늘 나와 함께 떠날 차는?",
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                            height: 1.2,
+                            fontSize: 50,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'noto_sans',
+                            color: Color(0xff4D5258),
+                          )),
+                    ),
+                    Container(
+                        width: 1280,
+                        margin: EdgeInsets.fromLTRB(0, 10, 0, 14),
+                        child: InkWell(
+                          mouseCursor: MaterialStateMouseCursor.clickable,
+                          hoverColor: Colors.transparent,
+                          splashColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          onTap: () {},
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text("오늘 가능한 차 더보기",
+                                  textAlign: TextAlign.start,
+                                  style: TextStyle(
+                                    height: 1.2,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w500,
+                                    fontFamily: 'noto_sans',
+                                    color: Color(0xff4D5258),
+                                  )),
+                              Container(
+                                width: 32,
+                                height: 32,
+                                color: Colors.black,
+                              )
+                              // Image.asset("assets/images/logo.png", height: 40, fit: BoxFit.cover,)),
+                            ],
+                          ),
+                        )),
+                    Container(
+                      //오늘 가능한 차
                       width: 1280,
                       height: 500,
                       child: todaysCar(),
                     ),
                     Container(
-                      constraints: BoxConstraints(minWidth: 1280, maxWidth: 1280),
+                      //메인 영상
+                      width: 1280,
                       alignment: Alignment.topCenter,
                       child: Placeholder(),
                     ),
                     Container(
-                      constraints: BoxConstraints(minWidth: 1280, maxWidth: 1280),
+                      //고객이용후기 타이틀
+                      margin: EdgeInsets.fromLTRB(0, 140, 0, 37),
+                      width: 1280,
+                      alignment: Alignment.topCenter,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                            Text("고객 이용후기",
+                                textAlign: TextAlign.start,
+                                style: TextStyle(
+                                  height: 1.2,
+                                  fontSize: 40,
+                                  fontWeight: FontWeight.w900,
+                                  fontFamily: 'noto_sans',
+                                  color: Color(0xff4D5258),
+                                )),
+                            Container(
+                              margin: EdgeInsets.fromLTRB(18, 20, 0, 0),
+                              child: Text("REVIEW",
+                                  textAlign: TextAlign.start,
+                                  style: TextStyle(
+                                    height: 1.2,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+                                    fontFamily: 'noto_sans',
+                                    color: Color(0xffC2A483),
+                                  )),
+                            )
+                          ]),
+                          homeManagementButton(() {}),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      //고객이용후기
+                      width: 1280,
                       alignment: Alignment.topCenter,
                       child: Placeholder(),
                     ),
                     Container(
+                      //SNS 타이틀
+                      margin: EdgeInsets.fromLTRB(0, 140, 0, 37),
+                      width: 1280,
+                      alignment: Alignment.topCenter,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                            Text("첫차박 소식",
+                                textAlign: TextAlign.start,
+                                style: TextStyle(
+                                  height: 1.2,
+                                  fontSize: 40,
+                                  fontWeight: FontWeight.w900,
+                                  fontFamily: 'noto_sans',
+                                  color: Color(0xff4D5258),
+                                )),
+                            Container(
+                              margin: EdgeInsets.fromLTRB(18, 20, 0, 0),
+                              child: Text("SNS",
+                                  textAlign: TextAlign.start,
+                                  style: TextStyle(
+                                    height: 1.2,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+                                    fontFamily: 'noto_sans',
+                                    color: Color(0xffC2A483),
+                                  )),
+                            )
+                          ]),
+                          Row(mainAxisAlignment: MainAxisAlignment.end, crossAxisAlignment: CrossAxisAlignment.start, children: [
+                            Container(
+                                width: 32,
+                                height: 32,
+                                child: MouseRegion(
+                                  cursor: SystemMouseCursors.click,
+                                  child: GestureDetector(
+                                      onTap: () {
+                                        _launchUrl("https://www.youtube.com/channel/UCZD18I_qxuu8QMzPLmpkX9g");
+                                      },
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.all(Radius.circular(11)),
+                                        child: Image.asset(
+                                          "assets/images/youtubeicon.png",
+                                          fit: BoxFit.cover,
+                                        ),
+                                      )),
+                                )),
+                            Container(
+                                margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                                width: 32,
+                                height: 32,
+                                child: MouseRegion(
+                                  cursor: SystemMouseCursors.click,
+                                  child: GestureDetector(
+                                      onTap: () {
+                                        _launchUrl("https://blog.naver.com/firstchabak");
+                                      },
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.all(Radius.circular(11)),
+                                        child: Image.asset(
+                                          "assets/images/blogicon.png",
+                                          fit: BoxFit.cover,
+                                        ),
+                                      )),
+                                ))
+                          ]),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      //SNS
+                      width: 1280,
+                      alignment: Alignment.topCenter,
+                      child: Placeholder(),
+                    ),
+                    Container(
+                      margin: EdgeInsets.fromLTRB(0, 42, 0, 0),
                       width: constraints.biggest.width > 1920 ? constraints.biggest.width : 1920,
                       color: Color(0xffC2A483),
                       alignment: constraints.biggest.width > 1280 ? Alignment.topCenter : Alignment.topLeft,
